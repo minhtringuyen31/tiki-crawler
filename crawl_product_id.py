@@ -75,4 +75,4 @@ for i in range(1, 11):
     time.sleep(random.randrange(3, 10))
 
 df = pd.DataFrame(product_id)
-df.to_csv('product_id.csv', index=False)
+df.to_csv('product_id_ncds.csv', index=False)
