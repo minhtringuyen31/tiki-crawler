@@ -59,26 +59,6 @@ params = (
     #('include', 'tag,images,gallery,promotions,badges,stock_item,variants,product_links,discount_tag,ranks,breadcrumbs,top_features,cta_desktop'),
 )
 
-# def parser_product(json):
-#     d = dict()
-#     d['id'] = json.get('id')
-#     d['sku'] = json.get('sku')
-#     d['short_description'] = json.get('short_description')
-#     d['price'] = json.get('price')
-#     d['list_price'] = json.get('list_price')
-#     d['price_usd'] = json.get('price_usd')
-#     d['discount'] = json.get('discount')
-#     d['discount_rate'] = json.get('discount_rate')
-#     d['review_count'] = json.get('review_count')
-#     d['order_count'] = json.get('order_count')
-#     d['inventory_status'] = json.get('inventory_status')
-#     d['is_visible'] = json.get('is_visible')
-#     d['stock_item_qty'] = json.get('stock_item').get('qty')
-#     d['stock_item_max_sale_qty'] = json.get('stock_item').get('max_sale_qty')
-#     d['product_name'] = json.get('name')
-#     d['brand_id'] = json.get('brand').get('id')
-#     d['brand_name'] = json.get('brand').get('name')
-#     return d
 
 def parser_product(json):
     d = dict()
@@ -103,7 +83,7 @@ def parser_product(json):
 
 
 
-df_id = pd.read_csv('product_id_ncds_ver2.csv')
+df_id = pd.read_csv('product_id_ver2.csv')
 p_ids = df_id.product_id.to_list()
 print(p_ids)
 result = []
@@ -114,4 +94,4 @@ for pid in tqdm(p_ids, total=len(p_ids)):
         result.append(parser_product(response.json()))
     # time.sleep(random.randrange(3, 5))
 df_product = pd.DataFrame(result)
-df_product.to_csv('crawled_data_ncds_2.csv', index=False)
+df_product.to_csv('crawled_data_2.csv', index=False)

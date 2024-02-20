@@ -77,7 +77,7 @@ def comment_parser(productId, json):
     return d
 
 
-df_id = pd.read_csv('product_id_ncds_ver2.csv')
+df_id = pd.read_csv('product_id_ver2.csv')
 p_ids = df_id.product_id.to_list()
 result = []
 for pid in tqdm(p_ids, total=len(p_ids)):
@@ -91,4 +91,4 @@ for pid in tqdm(p_ids, total=len(p_ids)):
             for comment in response.json().get('data'):
                 result.append(comment_parser(pid, comment))
 df_comment = pd.DataFrame(result)
-df_comment.to_csv('comments_data_ncds_2.csv', index=False)
+df_comment.to_csv('comments_data_2.csv', index=False)
