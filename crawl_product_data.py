@@ -59,30 +59,52 @@ params = (
     #('include', 'tag,images,gallery,promotions,badges,stock_item,variants,product_links,discount_tag,ranks,breadcrumbs,top_features,cta_desktop'),
 )
 
+# def parser_product(json):
+#     d = dict()
+#     d['id'] = json.get('id')
+#     d['sku'] = json.get('sku')
+#     d['short_description'] = json.get('short_description')
+#     d['price'] = json.get('price')
+#     d['list_price'] = json.get('list_price')
+#     d['price_usd'] = json.get('price_usd')
+#     d['discount'] = json.get('discount')
+#     d['discount_rate'] = json.get('discount_rate')
+#     d['review_count'] = json.get('review_count')
+#     d['order_count'] = json.get('order_count')
+#     d['inventory_status'] = json.get('inventory_status')
+#     d['is_visible'] = json.get('is_visible')
+#     d['stock_item_qty'] = json.get('stock_item').get('qty')
+#     d['stock_item_max_sale_qty'] = json.get('stock_item').get('max_sale_qty')
+#     d['product_name'] = json.get('name')
+#     d['brand_id'] = json.get('brand').get('id')
+#     d['brand_name'] = json.get('brand').get('name')
+#     return d
+
 def parser_product(json):
     d = dict()
-    d['id'] = json.get('id')
-    d['sku'] = json.get('sku')
-    d['short_description'] = json.get('short_description')
-    d['price'] = json.get('price')
-    d['list_price'] = json.get('list_price')
-    d['price_usd'] = json.get('price_usd')
-    d['discount'] = json.get('discount')
-    d['discount_rate'] = json.get('discount_rate')
-    d['review_count'] = json.get('review_count')
-    d['order_count'] = json.get('order_count')
-    d['inventory_status'] = json.get('inventory_status')
-    d['is_visible'] = json.get('is_visible')
-    d['stock_item_qty'] = json.get('stock_item').get('qty')
-    d['stock_item_max_sale_qty'] = json.get('stock_item').get('max_sale_qty')
-    d['product_name'] = json.get('meta_title')
-    d['brand_id'] = json.get('brand').get('id')
-    d['brand_name'] = json.get('brand').get('name')
+    d['id'] = json.get('id') if json.get('id') is not None else None
+    d['sku'] = json.get('sku') if json.get('sku') else None
+    d['short_description'] = json.get('short_description') if json.get('short_description') else None
+    d['price'] = json.get('price') if json.get('price') else None
+    d['list_price'] = json.get('list_price') if json.get('list_price') else None
+    d['price_usd'] = json.get('price_usd') if json.get('price_usd') else None
+    d['discount'] = json.get('discount') if json.get('discount') else None
+    d['discount_rate'] = json.get('discount_rate') if json.get('discount_rate') else None
+    d['review_count'] = json.get('review_count') if json.get('review_count') else None
+    d['order_count'] = json.get('order_count') if json.get('order_count') else None
+    d['inventory_status'] = json.get('inventory_status') if json.get('inventory_status') else None
+    d['is_visible'] = json.get('is_visible') if json.get('is_visible') else None
+    d['stock_item_qty'] = json.get('stock_item').get('qty') if json.get('stock_item') and json.get('stock_item').get('qty') else None
+    d['stock_item_max_sale_qty'] = json.get('stock_item').get('max_sale_qty') if json.get('stock_item') and json.get('stock_item').get('max_sale_qty') else None
+    d['product_name'] = json.get('name') if json.get('name') else None
+    d['brand_id'] = json.get('brand').get('id') if json.get('brand') and json.get('brand').get('id') else None
+    d['brand_name'] = json.get('brand').get('name') if json.get('brand') and json.get('brand').get('name') else None
     return d
 
 
-df_id = pd.read_csv('product_id_ncds.csv')
-p_ids = df_id.id.to_list()
+
+df_id = pd.read_csv('product_id_ncds_ver2.csv')
+p_ids = df_id.product_id.to_list()
 print(p_ids)
 result = []
 for pid in tqdm(p_ids, total=len(p_ids)):
@@ -92,4 +114,4 @@ for pid in tqdm(p_ids, total=len(p_ids)):
         result.append(parser_product(response.json()))
     # time.sleep(random.randrange(3, 5))
 df_product = pd.DataFrame(result)
-df_product.to_csv('crawled_data_ncds.csv', index=False)
+df_product.to_csv('crawled_data_ncds_2.csv', index=False)
