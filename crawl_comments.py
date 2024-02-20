@@ -62,9 +62,10 @@ params = {
     'include': 'comments'
 }
 
-def comment_parser(json):
+def comment_parser(productId, json):
     d = dict()
-    d['id'] = json.get(id)
+    d['product_id'] = productId
+    d['id'] = json.get('id')
     d['title'] = json.get('title')
     d['content'] = json.get('content')
     d['thank_count'] = json.get('thank_count')
@@ -76,8 +77,8 @@ def comment_parser(json):
     return d
 
 
-df_id = pd.read_csv('product_id_ncds.csv')
-p_ids = df_id.id.to_list()
+df_id = pd.read_csv('product_id_ncds_ver2.csv')
+p_ids = df_id.product_id.to_list()
 result = []
 for pid in tqdm(p_ids, total=len(p_ids)):
     params['product_id'] = pid
@@ -88,6 +89,6 @@ for pid in tqdm(p_ids, total=len(p_ids)):
         if response.status_code == 200:
             print('Crawl comment page {} success!!!'.format(i))
             for comment in response.json().get('data'):
-                result.append(comment_parser(comment))
+                result.append(comment_parser(pid, comment))
 df_comment = pd.DataFrame(result)
-df_comment.to_csv('comments_data_ncds.csv', index=False)
+df_comment.to_csv('comments_data_ncds_2.csv', index=False)
