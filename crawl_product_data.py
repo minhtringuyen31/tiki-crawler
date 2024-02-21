@@ -109,9 +109,17 @@ print(p_ids)
 result = []
 for pid in tqdm(p_ids, total=len(p_ids)):
     response = requests.get('https://tiki.vn/api/v2/products/{}'.format(pid), headers=headers, params=params, cookies=cookies)
-    if response.status_code == 200:
-        print('Crawl data {} success !!!'.format(pid))
-        result.append(parser_product(response.json()))
+    try:
+        response.raise_for_status()  # Kiểm tra trạng thái của yêu cầu
+        if response.status_code == 200:
+            print('Crawl data {} success !!!'.format(pid))
+            data = response.json()  # Phân tích phản hồi thành JSON
+            # Xử lý dữ liệu ở đây
+            result.append(parser_product(data))
+    except requests.exceptions.HTTPError as err:
+        print(err)
+    except ValueError as err:
+        print("Invalid JSON:", err)
     # time.sleep(random.randrange(3, 5))
 df_product = pd.DataFrame(result)
-df_product.to_csv('crawled_data_ncds_2.csv', index=False)
+df_product.to_csv('crawled_data_ncds_4.csv', index=False)

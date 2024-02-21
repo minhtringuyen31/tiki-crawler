@@ -86,9 +86,23 @@ for pid in tqdm(p_ids, total=len(p_ids)):
     for i in range(2):
         params['page'] = i
         response = requests.get('https://tiki.vn/api/v2/reviews', headers=headers, params=params, cookies=cookies)
-        if response.status_code == 200:
-            print('Crawl comment page {} success!!!'.format(i))
-            for comment in response.json().get('data'):
-                result.append(comment_parser(pid, comment))
+        # if response.status_code == 200:
+        #     print('Crawl comment page {} success!!!'.format(i))
+        #     for comment in response.json().get('data'):
+        #         result.append(comment_parser(pid, comment))
+        try:
+            response.raise_for_status()  # Kiểm tra trạng thái của yêu cầu
+            if response.status_code == 200:
+                print('Crawl comment page {} success!!!'.format(i))
+                data = response.json().get('data')  # Lấy dữ liệu JSON
+                if data:  # Kiểm tra xem có dữ liệu không trước khi lặp
+                    for comment in data:
+                        result.append(comment_parser(pid, comment))
+                else:
+                    print("No data found in the response.")
+        except requests.exceptions.HTTPError as err:
+            print(err)
+        except ValueError as err:
+            print("Invalid JSON:", err)
 df_comment = pd.DataFrame(result)
-df_comment.to_csv('comments_data_ncds_2.csv', index=False)
+df_comment.to_csv('comments_data_ncds_3.csv', index=False)
